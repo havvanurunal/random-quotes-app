@@ -1,5 +1,5 @@
 export function Body2({ children }) {
   return (
-    <span className='text-sm text-end'>{children}</span>
+    <span className='text-sm md:text-lg text-end'>{children}</span>
   );
 }
