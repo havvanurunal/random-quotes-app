@@ -3,32 +3,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { quotes as initialQuotes } from './quotes';
 
-function getRandomIndex(arrayLength) {
-  return Math.floor(Math.random() * arrayLength);
-}
-
 const QuotesContext = createContext([]);
 const QuotesDispatchContext = createContext(undefined);
-
-function shuffleArray(array) {
-  const shuffled = [...array]; // make a copy
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // swap
-  }
-  return shuffled;
-}
-
 
 export const QuotesProvider = ({ children }) => {
   const [quotes, setQuotes] = useState(initialQuotes);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [shuffledIndices, setShuffledIndices] = useState(() => {
-    // create array and shuffle it
-    const indices = Array.from({ length: initialQuotes.length }, (_, i) => i);
-    return shuffleArray(indices);
-  });
-  const [position, setPosition] = useState(0);
 
   useEffect(() => {
     if (typeof window !== 'undefined') { // this code only runs in the browser. 
@@ -61,26 +41,11 @@ export const QuotesProvider = ({ children }) => {
     }
   }, [currentIndex]);
 
-  useEffect(() => { // runs once when components mounts
-    if (typeof window !== 'undefined') { // this code only runs in the browser. 
-      const savedShuffledIndices = localStorage.getItem('shuffledIndices'); // checks localStorage for the key 'currentIndex'
-      if (savedShuffledIndices) {
-        setShuffledIndices(JSON.parse(savedShuffledIndices));
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('shuffledIndices', JSON.stringify(shuffledIndices));
-    }
-  }, [shuffledIndices]);
-
   function handleUnlike(quoteToUnlike) {
     setQuotes((prevQuotes) => {
       const updatedQuotes = prevQuotes.map(currentQuote => {
         if (currentQuote.quote === quoteToUnlike.quote && currentQuote.author === quoteToUnlike.author) {
-          return { ...currentQuote, likeCount: 0 };
+          return { ...currentQuote, likeCount: Math.max(0, currentQuote.likeCount - 1) };
         } else {
           return currentQuote;
         }
@@ -104,21 +69,16 @@ export const QuotesProvider = ({ children }) => {
 
 
   function handleNextQuoteClick() {
-    const nextIndex = shuffledIndices[position];
+    let nextIndex;
+    do {
+      nextIndex = Math.floor(Math.random() * quotes.length);
+    } while
+      (nextIndex === currentIndex && quotes.length > 1);
     setCurrentIndex(nextIndex);
-
-    if (position === shuffledIndices.length - 1) {
-      const newShuffled = shuffleArray(shuffledIndices);
-      setShuffledIndices(newShuffled);
-      setPosition(0);
-      setCurrentIndex(newShuffled[0]);
-    } else {
-      setPosition(currentPosition => currentPosition + 1);
-    }
   }
 
   return (
-    <QuotesContext.Provider value={{ quotes, setQuotes, currentIndex }}>
+    <QuotesContext.Provider value={{ quotes, currentIndex }}>
       <QuotesDispatchContext.Provider value={{ handleUnlike, handleLike, handleNextQuoteClick }}>{children}</QuotesDispatchContext.Provider>
     </QuotesContext.Provider>
   );

@@ -1,6 +1,5 @@
 'use client';
 //it makes the component client side component, 
-import { useState, useEffect } from 'react';
 import { Subtitle } from '@/components/Subtitle';
 import { Body2 } from '@/components/Body2';
 import {
@@ -20,7 +19,10 @@ export default function UserQuotes() {
       <h1 className='text-4xl font-bold my-12'>Liked Quotes</h1>
       {likedQuotes.length > 0 && likedQuotes.map((quote) => (
         <div key={quote.quote} className='flex flex-col w-md my-6 mx-auto bg-slate-400 p-10 rounded-md'>
-          <button onClick={() => handleUnlike(quote)} className='self-end hover:cursor-pointer text-2xl'>❤️</button>
+          <div className='flex items-center gap-1 self-end'>
+            <button onClick={() => handleUnlike(quote)} className='self-end hover:cursor-pointer text-2xl'>❤️</button>
+            <span className='text-lg'>{quote.likeCount}</span>
+          </div>
           <div>
             <Subtitle title={quote.quote} />
             <Body2>{quote.author}</Body2>

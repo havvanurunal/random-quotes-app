@@ -10,7 +10,7 @@ export function Navbar() {
         <div className='flex gap-4'>
           <Link href='/' className='text-white hover:text-slate-200'>
             Home</Link>
-          <Link href='/user/quotes' className='text-white hover:text-slate-200' target='_blank'>Liked Quotes</Link>
+          <Link href='/user/quotes' className='text-white hover:text-slate-200'>Liked Quotes</Link>
         </div>
         <button onClick={toggleTheme} className='text-2xl absolute right-0'>
           {theme === 'dark' ? '☀️' : '🌙'}
