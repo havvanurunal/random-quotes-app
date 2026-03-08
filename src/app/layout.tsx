@@ -4,6 +4,7 @@ import { ThemeProvider } from './ThemeContext';
 import { ThemeWrapper } from '@/components/ThemeWrapper';
 import { Navbar } from '@/components/Navbar';
 import './globals.css';
+import { ReactNode } from 'react';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -20,7 +21,7 @@ export const metadata = {
   description: 'A simple app that displays random quotes.',
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang='en'>
       <body
@@ -30,7 +31,8 @@ export default function RootLayout({ children }) {
           <ThemeWrapper>
             <QuotesProvider>
               <Navbar />
-              {children}</QuotesProvider>
+              {children}
+            </QuotesProvider>
           </ThemeWrapper>
         </ThemeProvider>
       </body>
