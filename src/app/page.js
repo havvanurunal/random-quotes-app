@@ -18,14 +18,14 @@ export default function Home() {
   }
 
   return (
-    <main className='min-h-dvh flex items-center overflow-hidden'>
-      <div className={`flex flex-col w-md mx-auto bg-slate-400 p-10 rounded-md ${theme === 'dark' ? 'bg-slate-600' : 'bg-slate-300'}`}>
+    <main className='min-h-dvh flex items-center justify-center px-4'>
+      <div className={`flex flex-col w-full max-w-md mx-auto bg-slate-400 p-10 rounded-md  ${theme === 'dark' ? 'bg-slate-600' : 'bg-slate-300'}`}>
+        <div className='flex flex-row items-center justify-end gap-1'>
+          <LikeButton onClick={handleLikeClick}>❤️</LikeButton>
+          <span className='text-lg md:text-xl justify-end'>{quotes[currentIndex].likeCount}</span>
+        </div>
         <Subtitle title={quotes[currentIndex].quote} />
         <Body2>{quotes[currentIndex].author}</Body2>
-        <div className='flex flex-row items-center gap-1'>
-          <LikeButton onClick={handleLikeClick}>❤️</LikeButton>
-          <span className='text-lg'>{quotes[currentIndex].likeCount}</span>
-        </div>
         <Button onClick={handleNextQuoteClick}>Next Quote</Button>
       </div>
     </main >
