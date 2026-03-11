@@ -1,7 +1,15 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field';
 
 export default function LoginPage() {
   const [activeTab, setActiveTab] = useState('login');
@@ -42,7 +50,7 @@ export default function LoginPage() {
           value={activeTab}
           onValueChange={(value: string) => setActiveTab(value)}
         >
-          <TabsList variant='line' className='gap-4 mb-6'>
+          <TabsList variant='line' className='mb-6'>
             <TabsTrigger value='login' className='text-xl'>
               Login
             </TabsTrigger>
@@ -54,31 +62,27 @@ export default function LoginPage() {
 
         {activeTab === 'login' ? (
           <form onSubmit={handleSubmit}>
-            <div className='flex flex-col gap-4'>
-              <div className='flex flex-col gap-1'>
-                <label htmlFor='login-email' className='text-m font-medium'>
-                  Email
-                </label>
-                <input
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor='login-email'>Email</FieldLabel>
+                <Input
                   id='login-email'
                   name='email'
                   autoComplete='email'
                   type='email'
-                  placeholder='Email'
+                  placeholder='john@example.com'
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  className='w-full px-4 py-2 rounded border  text-shadow-slate-50 border-gray-600 cursor-pointer hover:bg-slate-100 hover:text-slate-600'
+                  className='bg-amber-50'
                   required
                 />
-              </div>
+              </Field>
 
-              <div className='flex flex-col gap-1'>
-                <label htmlFor='login-password' className='text-m font-medium'>
-                  Password
-                </label>
-                <input
+              <Field>
+                <FieldLabel htmlFor='login-password'>Password</FieldLabel>
+                <Input
                   id='login-password'
                   name='password'
                   autoComplete='current-password'
@@ -88,27 +92,26 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  className='w-full px-4 py-2 rounded border  text-shadow-slate-50 border-gray-600 cursor-pointer hover:bg-slate-100 hover:text-slate-600'
+                  className='bg-amber-50'
                   required
                 />
-              </div>
+              </Field>
 
-              <button
+              <Button
+                variant='outline'
                 type='submit'
-                className='w-full px-4 py-2 rounded bg-slate-600 text-white cursor-pointer hover:bg-slate-700'
+                className='bg-slate-600 text-white'
               >
                 Submit
-              </button>
-            </div>
+              </Button>
+            </FieldGroup>
           </form>
         ) : (
           <form onSubmit={handleSubmit}>
-            <div className='flex flex-col gap-4'>
-              <div className='flex flex-col gap-1'>
-                <label htmlFor='signup-name' className='text-m font-medium'>
-                  Name
-                </label>
-                <input
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor='signup-name'>Name</FieldLabel>
+                <Input
                   id='signup-name'
                   name='name'
                   autoComplete='given-name'
@@ -118,16 +121,14 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className='w-full px-4 py-2 rounded border text-shadow-slate-50 border-gray-600 cursor-pointer hover:bg-slate-100 hover:text-slate-600'
+                  className='bg-amber-50'
                   required
                 />
-              </div>
+              </Field>
 
-              <div className='flex flex-col gap-1'>
-                <label htmlFor='signup-surname' className='text-m font-medium'>
-                  Surname
-                </label>
-                <input
+              <Field>
+                <FieldLabel htmlFor='signup-surname'>Surname</FieldLabel>
+                <Input
                   id='signup-surname'
                   name='surname'
                   autoComplete='family-name'
@@ -137,16 +138,14 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, surname: e.target.value })
                   }
-                  className='w-full px-4 py-2 rounded border  text-shadow-slate-50 border-gray-600 cursor-pointer hover:bg-slate-100 hover:text-slate-600'
+                  className='bg-amber-50'
                   required
                 />
-              </div>
+              </Field>
 
-              <div className='flex flex-col gap-1'>
-                <label htmlFor='signup-email' className='text-m font-medium'>
-                  Email
-                </label>
-                <input
+              <Field>
+                <FieldLabel htmlFor='signup-email'>Email</FieldLabel>
+                <Input
                   id='signup-email'
                   name='email'
                   autoComplete='email'
@@ -156,16 +155,14 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  className='w-full px-4 py-2 rounded border  text-shadow-slate-50 border-gray-600 cursor-pointer hover:bg-slate-100 hover:text-slate-600'
+                  className='bg-amber-50'
                   required
                 />
-              </div>
+              </Field>
 
-              <div className='flex flex-col gap-1'>
-                <label htmlFor='signup-password' className='text-m font-medium'>
-                  Password
-                </label>
-                <input
+              <Field>
+                <FieldLabel htmlFor='signup-password'>Password</FieldLabel>
+                <Input
                   id='signup-password'
                   name='password'
                   autoComplete='new-password'
@@ -175,19 +172,16 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  className='w-full px-4 py-2 rounded border  text-shadow-slate-50 border-gray-600 cursor-pointer hover:bg-slate-100 hover:text-slate-600'
+                  className='bg-amber-50'
                   required
                 />
-              </div>
+              </Field>
 
-              <div className='flex flex-col gap-1'>
-                <label
-                  htmlFor='signup-confirm-password'
-                  className='text-m font-medium'
-                >
+              <Field>
+                <FieldLabel htmlFor='signup-confirm-password'>
                   Confirm Password
-                </label>
-                <input
+                </FieldLabel>
+                <Input
                   id='signup-confirm-password'
                   name='confirmPassword'
                   autoComplete='new-password'
@@ -200,18 +194,19 @@ export default function LoginPage() {
                       confirmPassword: e.target.value,
                     })
                   }
-                  className='w-full px-4 py-2 rounded border  text-shadow-slate-50 border-gray-600 cursor-pointer hover:bg-slate-100 hover:text-slate-600'
+                  className='bg-amber-50'
                   required
                 />
-              </div>
+              </Field>
 
-              <button
+              <Button
+                variant='outline'
                 type='submit'
-                className='w-full px-4 py-2 rounded bg-slate-600 text-white cursor-pointer hover:bg-slate-700'
+                className='bg-slate-600 text-white'
               >
                 Submit
-              </button>
-            </div>
+              </Button>
+            </FieldGroup>
           </form>
         )}
       </div>

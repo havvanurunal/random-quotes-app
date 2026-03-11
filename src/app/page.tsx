@@ -1,16 +1,17 @@
 'use client';
 import { Subtitle } from '@/components/Subtitle';
 import { Body2 } from '@/components/Body2';
-import { Button } from '@/components/Button';
-import { LikeButton } from '@/components/LikeButton';
-import { useQuotesContext } from '@/app/QuotesContext';
-import { useQuotesDispatchContext } from '@/app/QuotesContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader } from '@/components/ui/card';
+import {
+  useQuotesContext,
+  useQuotesDispatchContext,
+} from '@/app/QuotesContext';
 import { useTheme } from '@/app/ThemeContext';
 
 export default function Home() {
   const { quotes, currentIndex } = useQuotesContext();
   const { handleNextQuoteClick, handleLike } = useQuotesDispatchContext();
-  const { theme } = useTheme();
 
   function handleLikeClick() {
     handleLike(quotes[currentIndex]);
@@ -18,21 +19,30 @@ export default function Home() {
 
   return (
     <main className='min-h-dvh flex items-center justify-center px-4'>
-      <div
-        className={`flex flex-col w-full max-w-md mx-auto bg-slate-400 p-10 rounded-md  ${
-          theme === 'dark' ? 'bg-slate-600' : 'bg-slate-300'
-        }`}
-      >
-        <div className='flex flex-row items-center justify-end gap-1'>
-          <LikeButton onClick={handleLikeClick}>❤️</LikeButton>
-          <span className='text-lg md:text-xl justify-end'>
+      <Card className='max-w-md w-full p-7 bg-slate-400'>
+        <CardHeader className='flex items-center justify-end'>
+          <Button
+            variant='ghost'
+            size='icon'
+            className='text-xl'
+            onClick={handleLikeClick}
+          >
+            ❤️
+          </Button>
+          <span className=' text-xl justify-end'>
             {quotes[currentIndex].likeCount}
           </span>
-        </div>
+        </CardHeader>
         <Subtitle title={quotes[currentIndex].quote} />
         <Body2>{quotes[currentIndex].author}</Body2>
-        <Button onClick={handleNextQuoteClick}>Next Quote</Button>
-      </div>
+        <Button
+          variant='outline'
+          className='bg-slate-600 text-amber-50'
+          onClick={handleNextQuoteClick}
+        >
+          Next Quote
+        </Button>
+      </Card>
     </main>
   );
 }

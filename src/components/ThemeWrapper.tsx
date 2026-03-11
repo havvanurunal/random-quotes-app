@@ -2,10 +2,10 @@
 import { useTheme } from '@/app/ThemeContext';
 import { ReactNode } from 'react';
 
-type ThemeWrapperProp = {
+type ThemeWrapperProps = {
   children: ReactNode;
 };
-export function ThemeWrapper({ children }: ThemeWrapperProp) {
+export function ThemeWrapper({ children }: ThemeWrapperProps) {
   const { theme } = useTheme();
 
   return (

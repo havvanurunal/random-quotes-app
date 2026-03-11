@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTheme } from '@/app/ThemeContext';
+import { Button } from '@/components/ui/button';
 
 export function Navbar() {
   const { theme, toggleTheme } = useTheme();
@@ -12,9 +13,11 @@ export function Navbar() {
       <div className='flex justify-center items-center relative p-4 md:p-0'>
         <div className=' md:hidden flex justify-center items-center'>
           {!isOpen && (
-            <button
-              onClick={() => setIsOpen(!isOpen)}
+            <Button
+              variant='ghost'
               className='absolute left-0 text-white text-3xl cursor-pointer'
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label='Open menu'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -30,7 +33,7 @@ export function Navbar() {
                   d='M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5'
                 />
               </svg>
-            </button>
+            </Button>
           )}
         </div>
 
@@ -54,20 +57,23 @@ export function Navbar() {
             Log In/Sign Up
           </Link>
         </div>
-
-        <button
+        <Button
+          variant='ghost'
           onClick={toggleTheme}
           className='absolute text-2xl right-0 cursor-pointer'
+          aria-label='Toggle menu'
         >
           {theme === 'dark' ? '☀️' : '🌙'}
-        </button>
+        </Button>
       </div>
 
       {isOpen && (
         <div className='absolute top-0 w-full left-0 md:hidden flex flex-col gap-3 bg-slate-600 p-6 rounded shadow-lg z-10'>
-          <button
+          <Button
+            variant='ghost'
             onClick={() => setIsOpen(false)}
             className='self-end text-white text-xl mb-4 hover:text-gray-300 cursor-pointer'
+            aria-label='Close menu'
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -83,7 +89,7 @@ export function Navbar() {
                 d='M6 18 18 6M6 6l12 12'
               />
             </svg>
-          </button>
+          </Button>
           <Link
             href='/'
             className='text-white hover:text-slate-200 py-2 px-4 hover:bg-slate-600 rounded cursor-pointer'
@@ -101,6 +107,7 @@ export function Navbar() {
           <Link
             href='/user/profile/login'
             className='text-white hover:text-slate-200 py-2 px-4 hover:bg-slate-600 rounded cursor-pointer'
+            onClick={() => setIsOpen(false)}
           >
             Log In/Sign Up
           </Link>

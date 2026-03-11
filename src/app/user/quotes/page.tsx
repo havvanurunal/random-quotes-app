@@ -2,6 +2,8 @@
 //it makes the component client side component,
 import { Subtitle } from '@/components/Subtitle';
 import { Body2 } from '@/components/Body2';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   useQuotesContext,
   useQuotesDispatchContext,
@@ -14,29 +16,36 @@ export default function UserQuotes() {
   const likedQuotes = quotes.filter((quote) => quote.likeCount > 0);
 
   return (
-    <main className='min-h-dvh text-center'>
-      <h1 className='text-4xl font-bold my-12'>Liked Quotes</h1>
-      {likedQuotes.length > 0 &&
-        likedQuotes.map((quote) => (
-          <div
-            key={quote.quote}
-            className='flex flex-col w-md my-6 mx-auto bg-slate-400 p-10 rounded-md'
-          >
-            <div className='flex items-center gap-1 self-end'>
-              <button
-                onClick={() => handleUnlike(quote)}
-                className='self-end hover:cursor-pointer text-2xl'
-              >
-                ❤️
-              </button>
-              <span className='text-lg'>{quote.likeCount}</span>
-            </div>
-            <div>
-              <Subtitle title={quote.quote} />
-              <Body2>{quote.author}</Body2>
-            </div>
-          </div>
-        ))}
+    <main className='min-h-dvh flex justify-center px-4'>
+      <Card className='max-w-md w-full ring-0'>
+        <CardTitle className='text-3xl font-bold text-center mb-6 mt-5'>
+          Liked Quotes
+        </CardTitle>
+
+        {likedQuotes.length > 0 &&
+          likedQuotes.map((quote) => (
+            <Card
+              key={quote.quote}
+              className='flex flex-col w-full max-w-md my-6 mx-auto bg-slate-400 p-10 rounded-md'
+            >
+              <CardHeader className='flex items-center justify-end'>
+                <Button
+                  size='icon'
+                  variant='ghost'
+                  className='text-xl'
+                  onClick={() => handleUnlike(quote)}
+                >
+                  ❤️
+                </Button>
+                <span className='text-xl justify-end'>{quote.likeCount}</span>
+              </CardHeader>
+              <CardContent className='flex flex-col'>
+                <Subtitle title={quote.quote} />
+                <Body2>{quote.author}</Body2>
+              </CardContent>
+            </Card>
+          ))}
+      </Card>
     </main>
   );
 }

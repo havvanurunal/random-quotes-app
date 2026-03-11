@@ -16,6 +16,10 @@ type QuotesDispatchContextType = {
   handleNextQuoteClick: () => void;
 };
 
+type QuoteProviderProps = {
+  children: ReactNode;
+};
+
 const QuotesContext = createContext<QuotesContextType>({
   quotes: [],
   currentIndex: 0,
@@ -25,7 +29,7 @@ const QuotesDispatchContext = createContext<QuotesDispatchContextType | null>(
   null
 );
 
-export const QuotesProvider = ({ children }: { children: ReactNode }) => {
+export const QuotesProvider = ({ children }: QuoteProviderProps) => {
   const [quotes, setQuotes] = useState(initialQuotes);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -118,7 +122,14 @@ export const QuotesProvider = ({ children }: { children: ReactNode }) => {
 };
 
 // useQuotesContext is a custom hook used to simplify the usage of QuotesContext.
-export const useQuotesContext = () => useContext(QuotesContext);
+export const useQuotesContext = () => {
+  const context = useContext(QuotesContext);
+  if (!context) {
+    throw new Error('useQuotesContext must be used within a QuotesProvider');
+  }
+  return context;
+};
+
 export const useQuotesDispatchContext = () => {
   const context = useContext(QuotesDispatchContext);
   if (!context) {
