@@ -38,27 +38,20 @@ export const QuotesProvider = ({ children }: QuoteProviderProps) => {
       // this code only runs in the browser.
       const savedQuotes = localStorage.getItem('quotes');
       if (savedQuotes) {
-        setQuotes(JSON.parse(savedQuotes)); // converts it into object
+        setQuotes(JSON.parse(savedQuotes) as Quote[]); // converts it into object
       }
-    }
-  }, [setQuotes]);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('quotes', JSON.stringify(quotes));
-    }
-  }, [quotes]);
-
-  useEffect(() => {
-    // runs once when components mounts
-    if (typeof window !== 'undefined') {
-      // this code only runs in the browser.
       const savedCurrentIndex = localStorage.getItem('currentIndex'); // checks localStorage for the key 'currentIndex'
       if (savedCurrentIndex) {
         setCurrentIndex(Number(savedCurrentIndex));
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('quotes', JSON.stringify(quotes));
+    }
+  }, [quotes]);
 
   useEffect(() => {
     // runs every time currentIndex changes and saves the currentIndex to localStorage.
@@ -103,7 +96,7 @@ export const QuotesProvider = ({ children }: QuoteProviderProps) => {
   }
 
   function handleNextQuoteClick() {
-    let nextIndex;
+    let nextIndex: number;
     do {
       nextIndex = Math.floor(Math.random() * quotes.length);
     } while (nextIndex === currentIndex && quotes.length > 1);

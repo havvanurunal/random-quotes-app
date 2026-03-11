@@ -32,7 +32,7 @@ export default function UserQuotes() {
                 <Button
                   size='icon'
                   variant='ghost'
-                  className='text-xl'
+                  className='text-xl hover:bg-slate-400'
                   onClick={() => handleUnlike(quote)}
                 >
                   ❤️

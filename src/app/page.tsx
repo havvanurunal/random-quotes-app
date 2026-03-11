@@ -24,7 +24,7 @@ export default function Home() {
           <Button
             variant='ghost'
             size='icon'
-            className='text-xl'
+            className='text-xl hover:bg-slate-400'
             onClick={handleLikeClick}
           >
             ❤️
