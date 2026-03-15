@@ -1,48 +1,27 @@
-'use client';
-import { Subtitle } from '@/components/Subtitle';
-import { Body2 } from '@/components/Body2';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader } from '@/components/ui/card';
-import {
-  useQuotesContext,
-  useQuotesDispatchContext,
-} from '@/app/QuotesContext';
-import { useTheme } from '@/app/ThemeContext';
+import HomeClient from './HomeClient';
+import { auth0 } from '@/lib/auth0';
+import LoginButton from '@/components/LoginButton';
+import LogoutButton from '@/components/LogoutButton';
+import Profile from '@/components/Profile';
 
-export default function Home() {
-  const { quotes, currentIndex } = useQuotesContext();
-  const { handleNextQuoteClick, handleLike } = useQuotesDispatchContext();
-
-  function handleLikeClick() {
-    handleLike(quotes[currentIndex]);
-  }
+export default async function Home() {
+  const session = await auth0.getSession();
+  const user = session?.user;
 
   return (
     <main className='min-h-dvh flex items-center justify-center px-4'>
-      <Card className='max-w-md w-full p-7 bg-slate-400'>
-        <CardHeader className='flex items-center justify-end'>
-          <Button
-            variant='ghost'
-            size='icon'
-            className='text-xl hover:bg-slate-400'
-            onClick={handleLikeClick}
-          >
-            ❤️
-          </Button>
-          <span className=' text-xl justify-end'>
-            {quotes[currentIndex].likeCount}
-          </span>
-        </CardHeader>
-        <Subtitle title={quotes[currentIndex].quote} />
-        <Body2>{quotes[currentIndex].author}</Body2>
-        <Button
-          variant='outline'
-          className='bg-slate-600 text-amber-50'
-          onClick={handleNextQuoteClick}
-        >
-          Next Quote
-        </Button>
-      </Card>
+      <div className='action-card'>
+        {user ? (
+          <HomeClient />
+        ) : (
+          <>
+            <p className=''>
+              Welcome! Please log in to access your protected content.
+            </p>
+            <LoginButton />
+          </>
+        )}
+      </div>
     </main>
   );
 }
