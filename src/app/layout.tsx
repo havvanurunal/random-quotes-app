@@ -1,10 +1,21 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 import { QuotesProvider } from '@/app/QuotesContext';
 import { ThemeProvider } from './ThemeContext';
+import { ThemeToggle } from './ThemeToggle';
+import { MobileMenu } from './MobileMenu';
 import { ThemeWrapper } from '@/components/ThemeWrapper';
-import { Navbar } from '@/components/Navbar';
 import './globals.css';
-import { ReactNode } from 'react';
+import Link from 'next/link';
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu';
+import { auth0 } from '@/lib/auth0';
+import LoginButton from '@/components/LoginButton';
+import { TypographyH1 } from '@/components/ui/h1';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -21,7 +32,9 @@ export const metadata = {
   description: 'A simple app that displays random quotes.',
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }) {
+  const session = await auth0.getSession();
+  const user = session?.user;
   return (
     <html lang='en'>
       <body
@@ -29,10 +42,72 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         <ThemeProvider>
           <ThemeWrapper>
-            <QuotesProvider>
-              <Navbar />
-              {children}
-            </QuotesProvider>
+            <NavigationMenu className='flex flex-col max-w-full px-4 py-2'>
+              <div className='hidden md:block ml-auto'>
+                <ThemeToggle />
+              </div>
+              <NavigationMenuList className='hidden md:flex items-baseline'>
+                <NavigationMenuItem>
+                  <NavigationMenuLink
+                    asChild
+                    className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                  >
+                    <Link href='/'>Home Page</Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                {user && (
+                  <>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        asChild
+                        className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                      >
+                        <Link href='/user/quotes/'>Liked Quotes</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        asChild
+                        className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                      >
+                        <Link href='/user/profile/'>Profile</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        asChild
+                        className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                      >
+                        <Link href='/auth/logout/'>Log Out</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  </>
+                )}
+                {!user && (
+                  <NavigationMenuItem>
+                    <NavigationMenuLink
+                      asChild
+                      className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                    >
+                      <Link href='/auth/login/'>Log In</Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                )}
+              </NavigationMenuList>
+              <MobileMenu user={!!user} />
+            </NavigationMenu>
+            {user ? (
+              <QuotesProvider>{children}</QuotesProvider>
+            ) : (
+              <main className='min-h-dvh max-w-xl mx-auto flex flex-col items-center justify-center text-center gap-8'>
+                <TypographyH1>
+                  Welcome! Please log in to access your protected content.
+                </TypographyH1>
+                <LoginButton />
+              </main>
+            )}
           </ThemeWrapper>
         </ThemeProvider>
       </body>

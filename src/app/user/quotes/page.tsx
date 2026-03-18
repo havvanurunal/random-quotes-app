@@ -1,8 +1,8 @@
 'use client';
 //it makes the component client side component,
-import { Subtitle } from '@/components/Subtitle';
 import { Body2 } from '@/components/Body2';
 import { Button } from '@/components/ui/button';
+import { TypographyH2 } from '@/components/ui/h2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   useQuotesContext,
@@ -18,7 +18,7 @@ export default function UserQuotes() {
   return (
     <main className='min-h-dvh flex justify-center px-4'>
       <Card className='max-w-md w-full ring-0'>
-        <CardTitle className='text-3xl font-bold text-center mb-6 mt-5'>
+        <CardTitle className='text-3xl font-bold font-sans text-center mb-6 mt-5'>
           Liked Quotes
         </CardTitle>
 
@@ -26,21 +26,23 @@ export default function UserQuotes() {
           likedQuotes.map((quote) => (
             <Card
               key={quote.quote}
-              className='flex flex-col w-full max-w-md my-6 mx-auto bg-slate-400 p-10 rounded-md'
+              className='flex flex-col w-full max-w-md my-6 mx-auto bg-slate-400 py-15 px-5 rounded-md'
             >
               <CardHeader className='flex items-center justify-end'>
                 <Button
                   size='icon'
                   variant='ghost'
-                  className='text-xl hover:bg-slate-400'
+                  className='text-2xl hover:bg-slate-400'
                   onClick={() => handleUnlike(quote)}
                 >
                   ❤️
                 </Button>
-                <span className='text-xl justify-end'>{quote.likeCount}</span>
+                <span className='text-xl justify-end font-sans'>
+                  {quote.likeCount}
+                </span>
               </CardHeader>
               <CardContent className='flex flex-col'>
-                <Subtitle title={quote.quote} />
+                <TypographyH2>{quote.quote}</TypographyH2>
                 <Body2>{quote.author}</Body2>
               </CardContent>
             </Card>
