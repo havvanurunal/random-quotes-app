@@ -1,8 +1,8 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 import { QuotesProvider } from '@/app/QuotesContext';
 import { ThemeProvider } from './ThemeContext';
-import { ThemeToggle } from './ThemeToggle';
-import { MobileMenu } from './MobileMenu';
+import { ThemeToggle } from '../components/ThemeToggle';
+import { MobileMenu } from '../components/MobileMenu';
 import { ThemeWrapper } from '@/components/ThemeWrapper';
 import './globals.css';
 import Link from 'next/link';
@@ -43,7 +43,7 @@ export default async function RootLayout({ children }) {
         <ThemeProvider>
           <ThemeWrapper>
             <NavigationMenu className='flex flex-col max-w-full px-4 py-2'>
-              <div className='hidden md:block ml-auto'>
+              <div className='hidden md:block ml-auto mt-3'>
                 <ThemeToggle />
               </div>
               <NavigationMenuList className='hidden md:flex items-baseline'>
@@ -57,6 +57,15 @@ export default async function RootLayout({ children }) {
                 </NavigationMenuItem>
                 {user && (
                   <>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        asChild
+                        className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                      >
+                        <Link href='/user/quotes/new'>New Quote</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+
                     <NavigationMenuItem>
                       <NavigationMenuLink
                         asChild
@@ -86,14 +95,27 @@ export default async function RootLayout({ children }) {
                   </>
                 )}
                 {!user && (
-                  <NavigationMenuItem>
-                    <NavigationMenuLink
-                      asChild
-                      className={`${navigationMenuTriggerStyle()} bg-color-none`}
-                    >
-                      <Link href='/auth/login/'>Log In</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
+                  <>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        asChild
+                        className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                      >
+                        <Link href='/auth/login/'>Log In</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        asChild
+                        className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                      >
+                        <Link href='/auth/login?screen_hint=signup'>
+                          Sign Up
+                        </Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  </>
                 )}
               </NavigationMenuList>
               <MobileMenu user={!!user} />
