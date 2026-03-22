@@ -15,6 +15,7 @@ export const quotes: Quote[] = [
     quote: 'In the middle of difficulty lies opportunity.',
     author: 'Albert Einstein',
     likeCount: 0,
+    _id: '',
   },
   {
     quote: 'What you do today can improve all your tomorrows.',
