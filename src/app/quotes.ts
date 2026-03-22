@@ -1,8 +1,4 @@
-export type Quote = {
-  quote: string
-  author: string
-  likeCount: number
-}
+import type { Quote } from '@/types/quotes';
 
 export const quotes: Quote[] = [
   {
