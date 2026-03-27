@@ -16,8 +16,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewQuoteSchema } from '@/schemas/quotes';
-import { Quote } from '@/app/quotes';
-import { Spinner } from '@/components/ui/spinner';
 import { useRouter } from 'next/navigation';
 
 export type QuoteError = {
@@ -45,11 +43,16 @@ export default function NewQuotePage() {
 
   const {
     register,
-    formState: { errors: clientFormErrors, isValid: isFormValid },
+    formState: { errors: clientFormErrors },
   } = useForm<NewQuoteInput>({
     mode: 'onBlur',
     resolver: zodResolver(NewQuoteSchema),
   });
+
+  const authorError =
+    clientFormErrors?.author?.message || state.errors?.author?.[0];
+  const quoteError =
+    clientFormErrors?.quote?.message || state.errors?.quote?.[0];
 
   useEffect(() => {
     if (state.success) {
@@ -103,15 +106,9 @@ export default function NewQuotePage() {
               })}
             />
 
-            {state.errors?.author && (
+            {authorError && (
               <FieldDescription id='author-error' variant='error'>
-                {state.errors?.author?.join(':')}
-              </FieldDescription>
-            )}
-
-            {clientFormErrors?.author && (
-              <FieldDescription id='author-error' variant='error'>
-                {clientFormErrors?.author?.message}
+                {authorError}
               </FieldDescription>
             )}
           </Field>
@@ -139,15 +136,9 @@ export default function NewQuotePage() {
                   })}
                 />
 
-                {state.errors?.quote && (
+                {quoteError && (
                   <FieldDescription id='quote-error' variant='error'>
-                    {state.errors?.quote?.join(':')}
-                  </FieldDescription>
-                )}
-
-                {clientFormErrors?.quote && (
-                  <FieldDescription id='quote-error' variant='error'>
-                    {clientFormErrors?.quote?.message}
+                    {quoteError}
                   </FieldDescription>
                 )}
               </Field>
@@ -155,7 +146,7 @@ export default function NewQuotePage() {
           </FieldSet>
 
           <Field orientation='horizontal'>
-            <Button variant='secondary' type='submit' disabled={!isFormValid}>
+            <Button variant='secondary' type='submit'>
               Save Quote
             </Button>
             <Button variant='secondary' type='reset'>

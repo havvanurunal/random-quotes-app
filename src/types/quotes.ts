@@ -4,7 +4,4 @@ export type Quote = {
   likeCount: number;
 };
 
-export interface NewQuoteInput {
-  quote: string;
-  author: string;
-}
+export type NewQuoteInput = Omit<Quote, 'likeCount'>;
