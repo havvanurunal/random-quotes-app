@@ -1,9 +1,14 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+
 export default function LoginButton() {
   return (
-    <a href='/auth/login' className='button login font-bold font-sans'>
-      Log In
-    </a>
+    <Button>
+      <Link href='/auth/login' className='font-bold p-3 font-sans'>
+        Log In
+      </Link>
+    </Button>
   );
 }

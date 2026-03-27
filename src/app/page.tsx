@@ -1,8 +1,5 @@
-import HomeClient from './HomeClient';
+import HomeClient from '@/components/HomeClient';
 import { auth0 } from '@/lib/auth0';
-import LoginButton from '@/components/LoginButton';
-import LogoutButton from '@/components/LogoutButton';
-import Profile from '@/components/Profile';
 
 export default async function Home() {
   const session = await auth0.getSession();
@@ -11,16 +8,7 @@ export default async function Home() {
   return (
     <main className='min-h-dvh flex items-center justify-center px-4'>
       <div className='action-card'>
-        {user ? (
-          <HomeClient />
-        ) : (
-          <>
-            <p className=''>
-              Welcome! Please log in to access your protected content.
-            </p>
-            <LoginButton />
-          </>
-        )}
+        <HomeClient />
       </div>
     </main>
   );
