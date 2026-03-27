@@ -17,7 +17,7 @@ export default function UserQuotes() {
 
   return (
     <main className='min-h-dvh flex justify-center px-4'>
-      <Card className='max-w-md w-full ring-0'>
+      <Card className='max-w-md w-full ring-0 bg-color-none'>
         <CardTitle className='text-3xl font-bold font-sans text-center mb-6 mt-5'>
           Liked Quotes
         </CardTitle>

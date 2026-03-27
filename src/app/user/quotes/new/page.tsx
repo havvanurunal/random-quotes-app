@@ -10,13 +10,19 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { addQuote } from '@/app/actions/quoteActions';
-import { useActionState } from 'react';
+import { useEffect, useActionState } from 'react';
 import { Quote } from '@/app/quotes';
 import { Spinner } from '@/components/ui/spinner';
+import { useRouter } from 'next/navigation';
+
+export type QuoteError = {
+  author?: string[];
+  quote?: string[];
+};
 
 export type NewQuoteFormState = {
   success: boolean;
-  errors?: any;
+  errors?: QuoteError;
   data?: Partial<Quote>; // Partial function only requires certain parts of quote.
   inputs?: {
     author: string;
@@ -26,10 +32,6 @@ export type NewQuoteFormState = {
 
 const initialFormState: NewQuoteFormState = {
   success: false,
-  inputs: {
-    author: '',
-    quote: '',
-  },
 };
 
 export default function NewQuotePage() {
@@ -37,6 +39,15 @@ export default function NewQuotePage() {
     NewQuoteFormState,
     FormData
   >(addQuote, initialFormState);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.success) {
+      setTimeout(() => {
+        router.push('/');
+      }, 2000);
+    }
+  }, [state.success]);
 
   if (isPending) {
     return (
@@ -52,6 +63,7 @@ export default function NewQuotePage() {
     return (
       <div className='max-w-2xl mx-auto py-10 px-4 font-sans'>
         <h1 className='text-2xl font-bold mb-4'>Quote added successfully!</h1>
+        <p>Redirecting to home page...</p>
       </div>
     );
   }
@@ -74,10 +86,8 @@ export default function NewQuotePage() {
             />
 
             {state.errors?.author && (
-              <FieldDescription>
-                <span id='author-error' className='text-red-500'>
-                  {state.errors.author}
-                </span>
+              <FieldDescription id='author-error' variant='error'>
+                {state.errors.author}
               </FieldDescription>
             )}
           </Field>
@@ -98,10 +108,8 @@ export default function NewQuotePage() {
                 />
 
                 {state.errors?.quote && (
-                  <FieldDescription>
-                    <span id='quote-error' className='text-red-500'>
-                      {state.errors.quote}
-                    </span>
+                  <FieldDescription id='quote-error' variant='error'>
+                    {state.errors.quote}
                   </FieldDescription>
                 )}
               </Field>
@@ -109,8 +117,10 @@ export default function NewQuotePage() {
           </FieldSet>
 
           <Field orientation='horizontal'>
-            <Button type='submit'>Save Quote</Button>
-            <Button variant='outline' type='reset'>
+            <Button variant='secondary' type='submit'>
+              Save Quote
+            </Button>
+            <Button variant='secondary' type='reset'>
               Clear
             </Button>
           </Field>
