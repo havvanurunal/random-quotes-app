@@ -1,19 +1,39 @@
 'use client';
+import { useEffect, useState } from 'react';
+import { Quote } from '@/types/quotes';
+import { likeQuoteAction } from '@/app/actions/quoteActions';
 import { Body2 } from '@/components/Body2';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { TypographyH2 } from '@/components/ui/h2';
-import {
-  useQuotesContext,
-  useQuotesDispatchContext,
-} from '@/app/QuotesContext';
 
-export default function Home() {
-  const { quotes, currentIndex } = useQuotesContext();
-  const { handleNextQuoteClick, handleLike } = useQuotesDispatchContext();
+type HomeClientProps = {
+  quotes: Quote[];
+};
 
-  function handleLikeClick() {
-    handleLike(quotes[currentIndex]);
+export default function HomeClient({ quotes }: HomeClientProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    setCurrentIndex(Math.floor(Math.random() * quotes.length));
+  }, []);
+
+  const [likeCount, setLikeCount] = useState(
+    quotes[currentIndex]?.likeCount ?? 0
+  );
+
+  function handleNextQuoteClick() {
+    let nextIndex: number;
+    do {
+      nextIndex = Math.floor(Math.random() * quotes.length);
+    } while (nextIndex === currentIndex && quotes.length > 1);
+    setCurrentIndex(nextIndex);
+    setLikeCount(quotes[nextIndex]?.likeCount ?? 0);
+  }
+
+  async function handleLikeClick() {
+    setLikeCount((prev) => prev + 1);
+    await likeQuoteAction(quotes[currentIndex]._id);
   }
 
   return (
@@ -24,23 +44,22 @@ export default function Home() {
           size='icon'
           className='text-2xl hover:bg-slate-400'
           onClick={handleLikeClick}
+          aria-label='Like quote'
         >
           ❤️
         </Button>
-        <span className=' text-lg justify-end font-sans'>
-          {quotes[currentIndex].likeCount}
-        </span>
+        <span className=' text-lg justify-end font-sans'>{likeCount}</span>
       </CardHeader>
-      <TypographyH2>{quotes[currentIndex].quote}</TypographyH2>
-      <Body2>{quotes[currentIndex].author}</Body2>
+      <TypographyH2>{quotes[currentIndex]?.quote}</TypographyH2>
+      <Body2>{quotes[currentIndex]?.author}</Body2>
       <Button
         variant='outline'
         className='bg-slate-600 text-amber-50'
         onClick={handleNextQuoteClick}
+        aria-label='See next quote'
       >
         Next Quote
       </Button>
     </Card>
   );
 }
-// two different ways to pass values to components => Subtitle and Body2. Subtitle one is a standard prop, it's better when you want to pass multiple configurations. with Body2, we used different approach, we used children, instead of a specific value prop. for children, we must use it in opening and closing tags.
