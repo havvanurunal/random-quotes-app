@@ -11,8 +11,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { addQuote } from '@/app/actions/quoteActions';
 import { useEffect, useActionState } from 'react';
-import { Quote } from '@/app/quotes';
+import { NewQuoteInput } from '@/types/quotes';
 import { Spinner } from '@/components/ui/spinner';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { NewQuoteSchema } from '@/schemas/quotes';
 import { useRouter } from 'next/navigation';
 
 export type QuoteError = {
@@ -23,11 +26,8 @@ export type QuoteError = {
 export type NewQuoteFormState = {
   success: boolean;
   errors?: QuoteError;
-  data?: Partial<Quote>; // Partial function only requires certain parts of quote.
-  inputs?: {
-    author: string;
-    quote: string;
-  };
+  data?: Partial<NewQuoteInput>; // Partial function only requires certain parts of quote.
+  message?: string;
 };
 
 const initialFormState: NewQuoteFormState = {
@@ -40,6 +40,19 @@ export default function NewQuotePage() {
     FormData
   >(addQuote, initialFormState);
   const router = useRouter();
+
+  const {
+    register,
+    formState: { errors: clientFormErrors },
+  } = useForm<NewQuoteInput>({
+    mode: 'onBlur',
+    resolver: zodResolver(NewQuoteSchema),
+  });
+
+  const authorError =
+    clientFormErrors?.author?.message || state.errors?.author?.[0];
+  const quoteError =
+    clientFormErrors?.quote?.message || state.errors?.quote?.[0];
 
   useEffect(() => {
     if (state.success) {
@@ -76,18 +89,26 @@ export default function NewQuotePage() {
             <FieldLabel htmlFor='author-input'>Author</FieldLabel>
             <Input
               id='author-input'
-              name='author'
               type='text'
               placeholder='Evil Rabbit'
-              maxLength={50}
               aria-describedby='author-error'
-              required
-              defaultValue={state.inputs?.author}
+              defaultValue={state?.data?.author || ''}
+              {...register('author', {
+                required: 'Author name is required',
+                maxLength: {
+                  value: 50,
+                  message: 'Author name should be max 50 characters.',
+                },
+                minLength: {
+                  value: 2,
+                  message: 'Author name should be min 2 characters.',
+                },
+              })}
             />
 
-            {state.errors?.author && (
+            {authorError && (
               <FieldDescription id='author-error' variant='error'>
-                {state.errors.author}
+                {authorError}
               </FieldDescription>
             )}
           </Field>
@@ -100,16 +121,24 @@ export default function NewQuotePage() {
                   id='quote-text-area'
                   placeholder='Add any quote you like'
                   className='resize-none'
-                  maxLength={300}
-                  name='quote'
                   aria-describedby='quote-error'
-                  required
-                  defaultValue={state.inputs?.quote}
+                  defaultValue={state?.data?.quote || ''}
+                  {...register('quote', {
+                    required: 'Quote input is required',
+                    maxLength: {
+                      value: 300,
+                      message: 'Quote should be max 300 characters.',
+                    },
+                    minLength: {
+                      value: 2,
+                      message: 'Quote should be min 2 characters.',
+                    },
+                  })}
                 />
 
-                {state.errors?.quote && (
+                {quoteError && (
                   <FieldDescription id='quote-error' variant='error'>
-                    {state.errors.quote}
+                    {quoteError}
                   </FieldDescription>
                 )}
               </Field>

@@ -1,8 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
-import { quotes as initialQuotes } from './quotes';
-import { Quote } from '@/app/quotes';
+import { quotes as initialQuotes } from '../quotes';
+import { Quote } from '@/quotes';
 import { type ReactNode } from 'react';
 
 type QuotesContextType = {
