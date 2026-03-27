@@ -87,11 +87,21 @@ export function MobileMenu({ user }: MobileMenuProps) {
                   asChild
                   className={`${navigationMenuTriggerStyle()} bg-color-none`}
                 >
+                  <Link href='/user/quotes/new'>New Quote</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                >
                   <Link href='/user/quotes/' onClick={() => setIsOpen(false)}>
                     Liked Quotes
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
+
               <NavigationMenuItem>
                 <NavigationMenuLink
                   asChild
@@ -102,6 +112,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
+
               <NavigationMenuItem>
                 <NavigationMenuLink
                   asChild
@@ -114,14 +125,25 @@ export function MobileMenu({ user }: MobileMenuProps) {
           )}
 
           {!user && (
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className={`${navigationMenuTriggerStyle()} text-white`}
-              >
-                <Link href='/auth/login/'>Log In</Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
+            <>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                >
+                  <Link href='/auth/login/'>Log In</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                >
+                  <Link href='/auth/login?screen_hint=signup'>Sign Up</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </>
           )}
         </div>
       )}
