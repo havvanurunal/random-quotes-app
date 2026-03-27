@@ -10,16 +10,22 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { addQuote } from '@/app/actions/quoteActions';
-import { useActionState } from 'react';
+import { useEffect, useActionState } from 'react';
 import { NewQuoteInput } from '@/types/quotes';
 import { Spinner } from '@/components/ui/spinner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewQuoteSchema } from '@/schemas/quotes';
+import { useRouter } from 'next/navigation';
+
+export type QuoteError = {
+  author?: string[];
+  quote?: string[];
+};
 
 export type NewQuoteFormState = {
   success: boolean;
-  errors?: any;
+  errors?: QuoteError;
   data?: Partial<NewQuoteInput>; // Partial function only requires certain parts of quote.
   message?: string;
 };
@@ -33,6 +39,7 @@ export default function NewQuotePage() {
     NewQuoteFormState,
     FormData
   >(addQuote, initialFormState);
+  const router = useRouter();
 
   const {
     register,
@@ -41,6 +48,14 @@ export default function NewQuotePage() {
     mode: 'onBlur',
     resolver: zodResolver(NewQuoteSchema),
   });
+
+  useEffect(() => {
+    if (state.success) {
+      setTimeout(() => {
+        router.push('/');
+      }, 2000);
+    }
+  }, [state.success]);
 
   if (isPending) {
     return (
@@ -56,6 +71,7 @@ export default function NewQuotePage() {
     return (
       <div className='max-w-2xl mx-auto py-10 px-4 font-sans'>
         <h1 className='text-2xl font-bold mb-4'>Quote added successfully!</h1>
+        <p>Redirecting to home page...</p>
       </div>
     );
   }
@@ -86,13 +102,13 @@ export default function NewQuotePage() {
             />
 
             {state.errors?.author && (
-              <FieldDescription id='author-error'>
+              <FieldDescription id='author-error' variant='error'>
                 {state.errors?.author?.join(':')}
               </FieldDescription>
             )}
 
             {clientFormErrors?.author && (
-              <FieldDescription id='author-error'>
+              <FieldDescription id='author-error' variant='error'>
                 {clientFormErrors?.author?.message}
               </FieldDescription>
             )}
@@ -122,13 +138,13 @@ export default function NewQuotePage() {
                 />
 
                 {state.errors?.quote && (
-                  <FieldDescription id='quote-error'>
+                  <FieldDescription id='quote-error' variant='error'>
                     {state.errors?.quote?.join(':')}
                   </FieldDescription>
                 )}
 
                 {clientFormErrors?.quote && (
-                  <FieldDescription id='quote-error'>
+                  <FieldDescription id='quote-error' variant='error'>
                     {clientFormErrors?.quote?.message}
                   </FieldDescription>
                 )}
@@ -137,10 +153,10 @@ export default function NewQuotePage() {
           </FieldSet>
 
           <Field orientation='horizontal'>
-            <Button type='submit' disabled={!isFormValid}>
+            <Button variant='secondary' type='submit' disabled={!isFormValid}>
               Save Quote
             </Button>
-            <Button variant='outline' type='reset'>
+            <Button variant='secondary' type='reset'>
               Clear
             </Button>
           </Field>
