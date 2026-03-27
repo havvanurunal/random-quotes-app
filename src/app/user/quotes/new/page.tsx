@@ -16,6 +16,8 @@ import { Spinner } from '@/components/ui/spinner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewQuoteSchema } from '@/schemas/quotes';
+import { Quote } from '@/app/quotes';
+import { Spinner } from '@/components/ui/spinner';
 import { useRouter } from 'next/navigation';
 
 export type QuoteError = {
