@@ -33,36 +33,38 @@ export default function LikedQuotesClient({
   }
 
   return (
-    <Card className='max-w-md w-full ring-0 bg-transparent'>
+    <Card className='w-full ring-0 bg-transparent'>
       <CardTitle className='text-3xl font-bold font-sans text-center mb-6 mt-5'>
         Liked Quotes
       </CardTitle>
 
-      {likedQuotes.map((quote) => (
-        <Card
-          key={quote._id}
-          className='flex flex-col w-full max-w-md my-6 mx-auto bg-slate-400 py-15 px-5 rounded-md'
-        >
-          <CardHeader className='flex items-center justify-end'>
-            <Button
-              size='icon'
-              variant='ghost'
-              className='text-2xl hover:bg-slate-400'
-              onClick={() => handleUnlike(quote)}
-              aria-label='Unlike quote'
-            >
-              <Heart className='text-red-500 size-7' fill='currentColor' />
-            </Button>
-            <span className='text-xl justify-end font-sans'>
-              {quote.likedBy.length}
-            </span>
-          </CardHeader>
-          <CardContent className='flex flex-col'>
-            <TypographyH2>{quote.quote}</TypographyH2>
-            <Body2>{quote.author}</Body2>
-          </CardContent>
-        </Card>
-      ))}
+      <Card className='md:grid md:grid-cols-2 lg:grid-cols-3 lg:mx-15 lg:gap-4 ring-0 bg-transparent'>
+        {likedQuotes.map((quote) => (
+          <Card
+            key={quote._id}
+            className='flex flex-col w-full max-w-md my-6 mx-auto bg-slate-400 md:py-7 md:px-3 py-15 px-5 rounded-md'
+          >
+            <CardHeader className='flex items-center justify-end'>
+              <Button
+                size='icon'
+                variant='ghost'
+                className='text-2xl hover:bg-slate-400'
+                onClick={() => handleUnlike(quote)}
+                aria-label='Unlike quote'
+              >
+                <Heart className='text-red-500 size-7' fill='currentColor' />
+              </Button>
+              <span className='text-xl justify-end font-sans'>
+                {quote.likedBy.length}
+              </span>
+            </CardHeader>
+            <CardContent className='flex flex-col'>
+              <TypographyH2>{quote.quote}</TypographyH2>
+              <Body2>{quote.author}</Body2>
+            </CardContent>
+          </Card>
+        ))}
+      </Card>
     </Card>
   );
 }

@@ -57,7 +57,9 @@ export default function HomeClient({ quotes, userId }: HomeClientProps) {
             fill={isLiked ? 'currentColor' : 'none'}
           />
         </Button>
-        <span className=' text-lg justify-end font-sans'>{likeCount}</span>
+        {likeCount > 0 && (
+          <span className='text-lg justify-end font-sans'>{likeCount}</span>
+        )}
       </CardHeader>
       <TypographyH2>{quotes[currentIndex]?.quote}</TypographyH2>
       <Body2>{quotes[currentIndex]?.author}</Body2>

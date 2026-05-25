@@ -21,43 +21,45 @@ export default function MyQuotesClient({ quotes }: MyQuotesClientProps) {
   }
 
   return (
-    <Card className='max-w-md w-full ring-0 bg-transparent'>
+    <Card className='w-full ring-0 bg-transparent'>
       <CardTitle className='text-3xl font-bold font-sans text-center mb-6 mt-5'>
         My Quotes
       </CardTitle>
 
-      {myQuotes.map((quote) => (
-        <Card
-          key={quote._id}
-          className='flex flex-col w-full max-w-md my-6 mx-auto bg-slate-400 py-15 px-5 rounded-md'
-        >
-          <CardContent className='flex flex-col'>
-            <TypographyH2>{quote.quote}</TypographyH2>
-            <Body2>{quote.author}</Body2>
-          </CardContent>
+      <Card className='md:grid md:grid-cols-2 lg:grid-cols-3 lg:mx-15 gap-3 ring-0 bg-transparent'>
+        {myQuotes.map((quote) => (
+          <Card
+            key={quote._id}
+            className='flex flex-col w-full max-w-md my-6 mx-auto bg-slate-400 py-15 px-5 rounded-md'
+          >
+            <CardContent className='flex flex-col'>
+              <TypographyH2>{quote.quote}</TypographyH2>
+              <Body2>{quote.author}</Body2>
+            </CardContent>
 
-          <CardFooter className='flex justify-end border-none bg-slate-400 font-sans gap-2'>
-            <a href={`/user/my-quotes/${quote._id}/edit`}>
+            <CardFooter className='flex justify-end border-none bg-slate-400 font-sans gap-2'>
+              <a href={`/user/my-quotes/${quote._id}/edit`}>
+                <Button
+                  variant='default'
+                  aria-label='Edit the quote'
+                  className='bg-green-700 text-white p-3 hover:bg-green-600'
+                >
+                  Edit
+                </Button>
+              </a>
+
               <Button
                 variant='default'
-                aria-label='Edit the quote'
-                className='bg-green-700 text-white p-3 hover:bg-green-600'
+                onClick={() => handleDelete(quote)}
+                aria-label='Delete quote'
+                className='p-2 bg-red-700 text-white hover:bg-red-600 hover:text-white'
               >
-                Edit
+                Delete
               </Button>
-            </a>
-
-            <Button
-              variant='default'
-              onClick={() => handleDelete(quote)}
-              aria-label='Delete quote'
-              className='p-2 bg-red-700 text-white hover:bg-red-600 hover:text-white'
-            >
-              Delete
-            </Button>
-          </CardFooter>
-        </Card>
-      ))}
+            </CardFooter>
+          </Card>
+        ))}
+      </Card>
     </Card>
   );
 }
