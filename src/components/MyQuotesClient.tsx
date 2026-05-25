@@ -21,7 +21,7 @@ export default function MyQuotesClient({ quotes }: MyQuotesClientProps) {
   }
 
   return (
-    <Card className='max-w-md w-full ring-0'>
+    <Card className='max-w-md w-full ring-0 bg-transparent'>
       <CardTitle className='text-3xl font-bold font-sans text-center mb-6 mt-5'>
         My Quotes
       </CardTitle>
@@ -39,19 +39,19 @@ export default function MyQuotesClient({ quotes }: MyQuotesClientProps) {
           <CardFooter className='flex justify-end border-none bg-slate-400 font-sans gap-2'>
             <a href={`/user/my-quotes/${quote._id}/edit`}>
               <Button
-                variant='ghost'
+                variant='default'
                 aria-label='Edit the quote'
-                className='bg-green-700 text-white p-3'
+                className='bg-green-700 text-white p-3 hover:bg-green-600'
               >
                 Edit
               </Button>
             </a>
 
             <Button
-              variant='destructive'
+              variant='default'
               onClick={() => handleDelete(quote)}
               aria-label='Delete quote'
-              className='p-2 hover:bg-red-600 hover:text-white'
+              className='p-2 bg-red-700 text-white hover:bg-red-600 hover:text-white'
             >
               Delete
             </Button>

@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/seed.ts"
+    "lint": "eslint"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.16.0",
@@ -29,6 +28,8 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/estree": "^1.0.8",
+    "@types/json-schema": "^7.0.15",
     "@types/node": "25.4.0",
     "@types/react": "19.2.14",
     "babel-plugin-react-compiler": "1.0.0",

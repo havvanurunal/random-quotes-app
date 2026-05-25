@@ -1,26 +1,29 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Quote } from '@/types/quotes';
-import { likeQuoteAction } from '@/app/actions/quoteActions';
+import { likeQuoteAction, unlikeQuoteAction } from '@/app/actions/quoteActions';
 import { Body2 } from '@/components/Body2';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
 import { TypographyH2 } from '@/components/ui/h2';
+import { Heart } from 'lucide-react';
+import { useTheme } from '@/app/ThemeContext';
 
 type HomeClientProps = {
   quotes: Quote[];
+  userId?: string;
 };
 
-export default function HomeClient({ quotes }: HomeClientProps) {
+export default function HomeClient({ quotes, userId }: HomeClientProps) {
+  const { theme } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const currentQuote = quotes[currentIndex];
+  const isLiked = userId ? currentQuote?.likedBy?.includes(userId) : false;
+  const likeCount = currentQuote?.likedBy?.length ?? 0;
 
   useEffect(() => {
     setCurrentIndex(Math.floor(Math.random() * quotes.length));
   }, []);
-
-  const [likeCount, setLikeCount] = useState(
-    quotes[currentIndex]?.likeCount ?? 0
-  );
 
   function handleNextQuoteClick() {
     let nextIndex: number;
@@ -28,12 +31,15 @@ export default function HomeClient({ quotes }: HomeClientProps) {
       nextIndex = Math.floor(Math.random() * quotes.length);
     } while (nextIndex === currentIndex && quotes.length > 1);
     setCurrentIndex(nextIndex);
-    setLikeCount(quotes[nextIndex]?.likeCount ?? 0);
   }
 
   async function handleLikeClick() {
-    setLikeCount((prev) => prev + 1);
-    await likeQuoteAction(quotes[currentIndex]._id);
+    if (!userId) return;
+    if (isLiked) {
+      await unlikeQuoteAction(quotes[currentIndex]._id);
+    } else {
+      await likeQuoteAction(quotes[currentIndex]._id);
+    }
   }
 
   return (
@@ -46,15 +52,22 @@ export default function HomeClient({ quotes }: HomeClientProps) {
           onClick={handleLikeClick}
           aria-label='Like quote'
         >
-          ❤️
+          <Heart
+            className='text-red-500 size-7'
+            fill={isLiked ? 'currentColor' : 'none'}
+          />
         </Button>
         <span className=' text-lg justify-end font-sans'>{likeCount}</span>
       </CardHeader>
       <TypographyH2>{quotes[currentIndex]?.quote}</TypographyH2>
       <Body2>{quotes[currentIndex]?.author}</Body2>
       <Button
-        variant='outline'
-        className='bg-slate-600 text-amber-50'
+        variant='default'
+        className={`${
+          theme === 'dark'
+            ? 'bg-slate-700 text-amber-50'
+            : 'bg-slate-600 text-amber-50'
+        } font-sans`}
         onClick={handleNextQuoteClick}
         aria-label='See next quote'
       >
