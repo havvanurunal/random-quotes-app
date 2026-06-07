@@ -87,7 +87,23 @@ export function MobileMenu({ user }: MobileMenuProps) {
                   asChild
                   className={`${navigationMenuTriggerStyle()} bg-color-none`}
                 >
-                  <Link href='/user/quotes/new'>New Quote</Link>
+                  <Link
+                    href='/user/quotes/new'
+                    onClick={() => setIsOpen(false)}
+                  >
+                    New Quote
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                >
+                  <Link href='/user/my-quotes' onClick={() => setIsOpen(false)}>
+                    My Quotes
+                  </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
 

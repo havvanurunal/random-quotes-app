@@ -10,11 +10,9 @@ export function ThemeWrapper({ children }: ThemeWrapperProps) {
 
   return (
     <div
-      className={
-        theme === 'dark'
-          ? 'bg-black text-white min-h-screen'
-          : 'bg-white text-black min-h-screen'
-      }
+      className={`${
+        theme === 'dark' ? 'dark' : ''
+      } min-h-screen bg-background text-foreground`}
     >
       {children}
     </div>

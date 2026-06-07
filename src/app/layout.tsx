@@ -1,5 +1,4 @@
 import { Geist, Geist_Mono } from 'next/font/google';
-import { QuotesProvider } from '@/app/QuotesContext';
 import { ThemeProvider } from './ThemeContext';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { MobileMenu } from '../components/MobileMenu';
@@ -16,6 +15,7 @@ import {
 import { auth0 } from '@/lib/auth0';
 import LoginButton from '@/components/LoginButton';
 import { TypographyH1 } from '@/components/ui/h1';
+import { ReactNode } from 'react';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,7 +32,11 @@ export const metadata = {
   description: 'A simple app that displays random quotes.',
 };
 
-export default async function RootLayout({ children }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const session = await auth0.getSession();
   const user = session?.user;
   return (
@@ -63,6 +67,15 @@ export default async function RootLayout({ children }) {
                         className={`${navigationMenuTriggerStyle()} bg-color-none`}
                       >
                         <Link href='/user/quotes/new'>New Quote</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        asChild
+                        className={`${navigationMenuTriggerStyle()} bg-color-none`}
+                      >
+                        <Link href='/user/my-quotes'>My Quotes</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
 
@@ -121,7 +134,7 @@ export default async function RootLayout({ children }) {
               <MobileMenu user={!!user} />
             </NavigationMenu>
             {user ? (
-              <QuotesProvider>{children}</QuotesProvider>
+              children
             ) : (
               <main className='min-h-dvh max-w-xl mx-auto flex flex-col items-center justify-center text-center gap-8'>
                 <TypographyH1>
