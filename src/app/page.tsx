@@ -6,11 +6,17 @@ export default async function Home() {
   const quotes = await getQuotes();
   const session = await auth0.getSession();
   const userId = session?.user?.sub;
+  // eslint-disable-next-line react-hooks/purity -- this is a server component that renders once per request
+  const initialIndex = Math.floor(Math.random() * quotes.length);
 
   return (
     <main className="min-h-dvh flex items-center justify-center px-4">
       <div className="action-card">
-        <HomeClient quotes={quotes} userId={userId} />
+        <HomeClient
+          quotes={quotes}
+          userId={userId}
+          initialIndex={initialIndex}
+        />
       </div>
     </main>
   );

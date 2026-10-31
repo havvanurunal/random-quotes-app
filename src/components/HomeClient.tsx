@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Quote } from "@/types/quotes";
 import { likeQuoteAction, unlikeQuoteAction } from "@/app/actions/quoteActions";
 import { Body2 } from "@/components/Body2";
@@ -12,18 +12,19 @@ import { useTheme } from "@/app/ThemeContext";
 type HomeClientProps = {
   quotes: Quote[];
   userId?: string;
+  initialIndex: number;
 };
 
-export default function HomeClient({ quotes, userId }: HomeClientProps) {
+export default function HomeClient({
+  quotes,
+  userId,
+  initialIndex,
+}: HomeClientProps) {
   const { theme } = useTheme();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const currentQuote = quotes[currentIndex];
   const isLiked = userId ? currentQuote?.likedBy?.includes(userId) : false;
   const likeCount = currentQuote?.likedBy?.length ?? 0;
-
-  useEffect(() => {
-    setCurrentIndex(Math.floor(Math.random() * quotes.length));
-  }, []);
 
   function handleNextQuoteClick() {
     let nextIndex: number;
@@ -36,9 +37,9 @@ export default function HomeClient({ quotes, userId }: HomeClientProps) {
   async function handleLikeClick() {
     if (!userId) return;
     if (isLiked) {
-      await unlikeQuoteAction(quotes[currentIndex]._id);
+      await unlikeQuoteAction(currentQuote._id);
     } else {
-      await likeQuoteAction(quotes[currentIndex]._id);
+      await likeQuoteAction(currentQuote._id);
     }
   }
 
@@ -61,8 +62,8 @@ export default function HomeClient({ quotes, userId }: HomeClientProps) {
           <span className="text-lg justify-end font-sans">{likeCount}</span>
         )}
       </CardHeader>
-      <TypographyH2>{quotes[currentIndex]?.quote}</TypographyH2>
-      <Body2>{quotes[currentIndex]?.author}</Body2>
+      <TypographyH2>{currentQuote?.quote}</TypographyH2>
+      <Body2>{currentQuote?.author}</Body2>
       <Button
         variant="default"
         className={`${
