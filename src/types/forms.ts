@@ -5,9 +5,12 @@ export type QuoteError = {
   quote?: string[];
 };
 
-export type NewQuoteFormState = {
+export type ActionResult = {
   success: boolean;
+  message?: string;
+};
+
+export type NewQuoteFormState = ActionResult & {
   errors?: QuoteError;
   data?: Partial<NewQuoteInput>;
-  message?: string;
 };

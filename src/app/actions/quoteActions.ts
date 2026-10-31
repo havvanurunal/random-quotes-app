@@ -1,6 +1,6 @@
 "use server";
 
-import { NewQuoteFormState } from "@/types/forms";
+import { ActionResult, NewQuoteFormState } from "@/types/forms";
 import { NewQuoteSchema } from "@/schemas/quotes";
 import { Quote } from "@/types/quotes";
 import {
@@ -45,44 +45,83 @@ export async function addQuote(
       data: result.data,
     };
   } catch (error) {
+    console.error(error);
     return {
       success: false,
-      message: "An error occured when saving the quote, try again later.",
+      message: "An error occurred when saving the quote, try again later.",
       data: result.data,
     };
   }
 }
 
-export async function likeQuoteAction(quoteId: string): Promise<void> {
+export async function likeQuoteAction(quoteId: string): Promise<ActionResult> {
   const session = await auth0.getSession();
   const userId = session?.user?.sub;
 
   if (!userId) {
-    throw new Error("Unauthorized");
+    return { success: false, message: "Unauthorized" };
   }
 
-  await likeQuote(quoteId, userId);
+  try {
+    await likeQuote(quoteId, userId);
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "An error occurred when liking the quote, try again later.",
+    };
+  }
 }
 
-export async function unlikeQuoteAction(quoteId: string): Promise<void> {
+export async function unlikeQuoteAction(
+  quoteId: string,
+): Promise<ActionResult> {
   const session = await auth0.getSession();
   const userId = session?.user?.sub;
 
   if (!userId) {
-    throw new Error("Unauthorized");
+    return { success: false, message: "Unauthorized" };
   }
 
-  await unlikeQuote(quoteId, userId);
+  try {
+    await unlikeQuote(quoteId, userId);
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "An error occurred when unliking the quote, try again later.",
+    };
+  }
 }
 
-export async function deleteQuoteAction(quoteId: string): Promise<void> {
+export async function deleteQuoteAction(
+  quoteId: string,
+): Promise<ActionResult> {
   const session = await auth0.getSession();
   const userId = session?.user?.sub;
 
   if (!userId) {
-    throw new Error("Unauthorized");
+    return { success: false, message: "Unauthorized" };
   }
-  await deleteQuote(quoteId, userId);
+
+  try {
+    await deleteQuote(quoteId, userId);
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "An error occurred when deleting the quote, try again later.",
+    };
+  }
 }
 
 export async function updateQuoteAction(
@@ -110,7 +149,18 @@ export async function updateQuoteAction(
       data: { ...(rawData as Partial<Quote>) },
     };
   }
-
-  await updateQuote(quoteId, userId, result.data);
-  return { success: true };
+  try {
+    await updateQuote(quoteId, userId, result.data);
+    return {
+      success: true,
+      data: result.data,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "An error occurred when saving the quote, try again later.",
+      data: result.data,
+    };
+  }
 }
