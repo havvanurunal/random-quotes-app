@@ -1,6 +1,6 @@
-import { getQuoteById } from '@/app/services/quotes';
-import { auth0 } from '@/lib/auth0';
-import EditQuoteClient from '@/components/EditQuoteClient';
+import { getQuoteById } from "@/app/services/quotes";
+import { auth0 } from "@/lib/auth0";
+import EditQuoteClient from "@/components/EditQuoteClient";
 
 export default async function EditQuotePage({
   params,
@@ -18,7 +18,7 @@ export default async function EditQuotePage({
   }
 
   return (
-    <main className='min-h-dvh flex justify-center px-4'>
+    <main className="min-h-dvh flex justify-center px-4">
       <EditQuoteClient quote={quote} />
     </main>
   );

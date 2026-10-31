@@ -1,6 +1,6 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { MongoClient, ServerApiVersion } from "mongodb";
 
-const uri = process.env.MONGO_CONNECTION_URL || '';
+const uri = process.env.MONGO_CONNECTION_URL || "";
 let promise = null;
 
 async function getMongoClient() {
@@ -19,9 +19,9 @@ async function getMongoClient() {
 
 export async function getDb() {
   const connection = await getMongoClient();
-  return connection.db('random-quotes');
+  return connection.db("random-quotes");
 }
 
 export enum Collections {
-  quotes = 'quotes',
+  quotes = "quotes",
 }

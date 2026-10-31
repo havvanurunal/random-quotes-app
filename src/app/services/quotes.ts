@@ -1,6 +1,6 @@
-import { NewQuoteInput, Quote } from '@/types/quotes';
-import { Collections, getDb } from '../lib/mongo';
-import { ObjectId } from 'mongodb';
+import { NewQuoteInput, Quote } from "@/types/quotes";
+import { Collections, getDb } from "../lib/mongo";
+import { ObjectId } from "mongodb";
 
 function mapQuote(doc: any): Quote {
   return {
@@ -27,7 +27,7 @@ async function getQuotesCollection() {
 
 export async function createQuote(
   quote: NewQuoteInput,
-  userId: string
+  userId: string,
 ): Promise<Quote> {
   const col = await getQuotesCollection();
 
@@ -76,31 +76,31 @@ export async function getLikedQuotes(userId: string): Promise<Quote[]> {
 
 export async function likeQuote(
   quoteId: string,
-  userId: string
+  userId: string,
 ): Promise<void> {
   const col = await getQuotesCollection();
 
   await col.updateOne(
     { _id: new ObjectId(quoteId) },
-    { $push: { likedBy: userId } }
+    { $push: { likedBy: userId } },
   );
 }
 
 export async function unlikeQuote(
   quoteId: string,
-  userId: string
+  userId: string,
 ): Promise<void> {
   const col = await getQuotesCollection();
 
   await col.updateOne(
     { _id: new ObjectId(quoteId) },
-    { $pull: { likedBy: userId } }
+    { $pull: { likedBy: userId } },
   );
 }
 
 export async function deleteQuote(
   quoteId: string,
-  userId: string
+  userId: string,
 ): Promise<void> {
   const col = await getQuotesCollection();
 
@@ -110,12 +110,12 @@ export async function deleteQuote(
 export async function updateQuote(
   quoteId: string,
   userId: string,
-  data: NewQuoteInput
+  data: NewQuoteInput,
 ): Promise<void> {
   const col = await getQuotesCollection();
 
   await col.updateOne(
     { _id: new ObjectId(quoteId), userId },
-    { $set: { ...data, updatedAt: new Date().toISOString() } }
+    { $set: { ...data, updatedAt: new Date().toISOString() } },
   );
 }

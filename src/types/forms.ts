@@ -1,4 +1,4 @@
-import { NewQuoteInput } from './quotes';
+import { NewQuoteInput } from "./quotes";
 
 export type QuoteError = {
   author?: string[];
