@@ -1,9 +1,12 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-const uri = process.env.MONGO_CONNECTION_URL || "";
-let promise = null;
+let promise: Promise<MongoClient> | null = null;
 
 async function getMongoClient() {
+  const uri = process.env.MONGO_CONNECTION_URL;
+  if (!uri) {
+    throw new Error("MONGO_CONNECTION_URL is not set");
+  }
   if (!promise) {
     promise = new MongoClient(uri, {
       serverApi: {

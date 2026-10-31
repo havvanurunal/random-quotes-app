@@ -63,7 +63,13 @@ export async function likeQuoteAction(quoteId: string): Promise<ActionResult> {
   }
 
   try {
-    await likeQuote(quoteId, userId);
+    const found = await likeQuote(quoteId, userId);
+    if (!found) {
+      return {
+        success: false,
+        message: "Quote not found",
+      };
+    }
     return {
       success: true,
     };
@@ -87,7 +93,13 @@ export async function unlikeQuoteAction(
   }
 
   try {
-    await unlikeQuote(quoteId, userId);
+    const found = await unlikeQuote(quoteId, userId);
+    if (!found) {
+      return {
+        success: false,
+        message: "Quote not found",
+      };
+    }
     return {
       success: true,
     };
@@ -111,7 +123,13 @@ export async function deleteQuoteAction(
   }
 
   try {
-    await deleteQuote(quoteId, userId);
+    const found = await deleteQuote(quoteId, userId);
+    if (!found) {
+      return {
+        success: false,
+        message: "Quote not found",
+      };
+    }
     return {
       success: true,
     };
@@ -150,7 +168,14 @@ export async function updateQuoteAction(
     };
   }
   try {
-    await updateQuote(quoteId, userId, result.data);
+    const found = await updateQuote(quoteId, userId, result.data);
+    if (!found) {
+      return {
+        success: false,
+        message: "Quote not found",
+        data: result.data,
+      };
+    }
     return {
       success: true,
       data: result.data,

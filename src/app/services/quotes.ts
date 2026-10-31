@@ -1,8 +1,15 @@
 import { NewQuoteInput, Quote } from "@/types/quotes";
 import { Collections, getDb } from "../lib/mongo";
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 
-function mapQuote(doc: any): Quote {
+type QuoteDocument = NewQuoteInput & {
+  likedBy: string[];
+  userId: string;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+};
+
+function mapQuote(doc: WithId<QuoteDocument>): Quote {
   return {
     _id: doc._id.toString(),
     quote: doc.quote,
@@ -22,7 +29,7 @@ function mapQuote(doc: any): Quote {
 
 async function getQuotesCollection() {
   const db = await getDb();
-  return db.collection(Collections.quotes);
+  return db.collection<QuoteDocument>(Collections.quotes);
 }
 
 export async function createQuote(
@@ -33,7 +40,7 @@ export async function createQuote(
 
   const now = new Date();
 
-  const doc = {
+  const doc: Omit<QuoteDocument, "_id"> = {
     likedBy: [],
     createdAt: now.toISOString(),
     updatedAt: now.toISOString(),
@@ -43,7 +50,7 @@ export async function createQuote(
 
   const newQuote = await col.insertOne(doc);
 
-  return mapQuote({ ...doc, _id: newQuote.insertedId.toString() });
+  return mapQuote({ ...doc, _id: newQuote.insertedId });
 }
 
 export async function getQuotes(): Promise<Quote[]> {
@@ -77,45 +84,53 @@ export async function getLikedQuotes(userId: string): Promise<Quote[]> {
 export async function likeQuote(
   quoteId: string,
   userId: string,
-): Promise<void> {
+): Promise<boolean> {
   const col = await getQuotesCollection();
 
-  await col.updateOne(
+  const result = await col.updateOne(
     { _id: new ObjectId(quoteId) },
-    { $push: { likedBy: userId } },
+    { $addToSet: { likedBy: userId } },
   );
+
+  return result.matchedCount > 0;
 }
 
 export async function unlikeQuote(
   quoteId: string,
   userId: string,
-): Promise<void> {
+): Promise<boolean> {
   const col = await getQuotesCollection();
 
-  await col.updateOne(
+  const result = await col.updateOne(
     { _id: new ObjectId(quoteId) },
     { $pull: { likedBy: userId } },
   );
+
+  return result.matchedCount > 0;
 }
 
 export async function deleteQuote(
   quoteId: string,
   userId: string,
-): Promise<void> {
+): Promise<boolean> {
   const col = await getQuotesCollection();
 
-  await col.deleteOne({ _id: new ObjectId(quoteId), userId });
+  const result = await col.deleteOne({ _id: new ObjectId(quoteId), userId });
+
+  return result.deletedCount > 0;
 }
 
 export async function updateQuote(
   quoteId: string,
   userId: string,
   data: NewQuoteInput,
-): Promise<void> {
+): Promise<boolean> {
   const col = await getQuotesCollection();
 
-  await col.updateOne(
+  const result = await col.updateOne(
     { _id: new ObjectId(quoteId), userId },
     { $set: { ...data, updatedAt: new Date().toISOString() } },
   );
+
+  return result.matchedCount > 0;
 }
