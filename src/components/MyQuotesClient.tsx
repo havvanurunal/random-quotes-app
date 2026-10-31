@@ -14,10 +14,17 @@ type MyQuotesClientProps = {
 
 export default function MyQuotesClient({ quotes }: MyQuotesClientProps) {
   const [myQuotes, setMyQuotes] = useState(quotes);
+  const [message, setMessage] = useState<string | undefined>();
 
   async function handleDelete(quote: Quote) {
-    await deleteQuoteAction(quote._id);
-    setMyQuotes((prev) => prev.filter((q) => q._id !== quote._id));
+    const result = await deleteQuoteAction(quote._id);
+
+    if (!result.success) {
+      setMessage(result.message ?? "Something went wrong");
+    } else {
+      setMessage(undefined);
+      setMyQuotes((prev) => prev.filter((q) => q._id !== quote._id));
+    }
   }
 
   return (
@@ -25,6 +32,11 @@ export default function MyQuotesClient({ quotes }: MyQuotesClientProps) {
       <CardTitle className="text-3xl font-bold font-sans text-center mb-6 mt-5">
         My Quotes
       </CardTitle>
+      {message && (
+        <p className="text-sm text-red-800" role="alert">
+          {message}
+        </p>
+      )}
 
       <Card className="md:grid md:grid-cols-2 lg:grid-cols-3 lg:mx-15 gap-3 ring-0 bg-transparent">
         {myQuotes.map((quote) => (
