@@ -25,6 +25,7 @@ export default function HomeClient({
   const currentQuote = quotes[currentIndex];
   const isLiked = userId ? currentQuote?.likedBy?.includes(userId) : false;
   const likeCount = currentQuote?.likedBy?.length ?? 0;
+  const [message, setMessage] = useState<string | undefined>();
 
   function handleNextQuoteClick() {
     let nextIndex: number;
@@ -32,14 +33,21 @@ export default function HomeClient({
       nextIndex = Math.floor(Math.random() * quotes.length);
     } while (nextIndex === currentIndex && quotes.length > 1);
     setCurrentIndex(nextIndex);
+
+    setMessage(undefined);
   }
 
   async function handleLikeClick() {
     if (!userId) return;
-    if (isLiked) {
-      await unlikeQuoteAction(currentQuote._id);
+
+    const result = await (isLiked
+      ? unlikeQuoteAction(currentQuote._id)
+      : likeQuoteAction(currentQuote._id));
+
+    if (!result.success) {
+      setMessage(result.message ?? "Something went wrong");
     } else {
-      await likeQuoteAction(currentQuote._id);
+      setMessage(undefined);
     }
   }
 
@@ -76,6 +84,11 @@ export default function HomeClient({
       >
         Next Quote
       </Button>
+      {message && (
+        <p className="text-sm text-red-800" role="alert">
+          {message}
+        </p>
+      )}
     </Card>
   );
 }
