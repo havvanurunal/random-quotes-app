@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { TypographyH2 } from "@/components/ui/h2";
 import { deleteQuoteAction } from "@/app/actions/quoteActions";
+import Link from "next/link";
+import { boolean } from "zod";
 
 type MyQuotesClientProps = {
   quotes: Quote[];
@@ -50,15 +52,14 @@ export default function MyQuotesClient({ quotes }: MyQuotesClientProps) {
             </CardContent>
 
             <CardFooter className="flex justify-end border-none bg-slate-400 font-sans gap-2">
-              <a href={`/user/my-quotes/${quote._id}/edit`}>
-                <Button
-                  variant="default"
-                  aria-label="Edit the quote"
-                  className="bg-green-700 text-white p-3 hover:bg-green-600"
-                >
-                  Edit
-                </Button>
-              </a>
+              <Button
+                asChild
+                variant="default"
+                aria-label="Edit the quote"
+                className="bg-green-700 text-white p-3 hover:bg-green-600"
+              >
+                <Link href={`/user/my-quotes/${quote._id}/edit`}>Edit</Link>
+              </Button>
 
               <Button
                 variant="default"
