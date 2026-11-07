@@ -1,16 +1,23 @@
-import HomeClient from '@/components/HomeClient';
-import { auth0 } from '@/lib/auth0';
+import HomeClient from "@/components/HomeClient";
+import { getQuotes } from "@/app/services/quotes";
+import { auth0 } from "@/lib/auth0";
 
 export default async function Home() {
+  const quotes = await getQuotes();
   const session = await auth0.getSession();
-  const user = session?.user;
+  const userId = session?.user?.sub;
+  // eslint-disable-next-line react-hooks/purity -- this is a server component that renders once per request
+  const initialIndex = Math.floor(Math.random() * quotes.length);
 
   return (
-    <main className='min-h-dvh flex items-center justify-center px-4'>
-      <div className='action-card'>
-        <HomeClient />
+    <main className="min-h-dvh flex items-center justify-center px-4">
+      <div className="action-card">
+        <HomeClient
+          quotes={quotes}
+          userId={userId}
+          initialIndex={initialIndex}
+        />
       </div>
     </main>
   );
 }
-// two different ways to pass values to components => Subtitle and Body2. Subtitle one is a standard prop, it's better when you want to pass multiple configurations. with Body2, we used different approach, we used children, instead of a specific value prop. for children, we must use it in opening and closing tags.

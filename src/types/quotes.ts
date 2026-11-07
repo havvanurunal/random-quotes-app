@@ -1,7 +1,14 @@
 export type Quote = {
+  _id?: string;
   quote: string;
   author: string;
-  likeCount: number;
+  likedBy: string[];
+  userId?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
-export type NewQuoteInput = Omit<Quote, 'likeCount'>;
+export type NewQuoteInput = {
+  quote: string;
+  author: string;
+};

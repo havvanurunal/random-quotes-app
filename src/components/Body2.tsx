@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 type Body2Prop = {
   children: ReactNode;
@@ -6,6 +6,6 @@ type Body2Prop = {
 
 export function Body2({ children }: Body2Prop) {
   return (
-    <span className='text-sm md:text-lg text-end font-sans'>{children}</span>
+    <span className="text-sm md:text-lg text-end font-sans">{children}</span>
   );
 }
