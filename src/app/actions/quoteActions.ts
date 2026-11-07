@@ -1,32 +1,32 @@
-'use server';
+"use server";
 
-import { ActionResult, NewQuoteFormState } from '@/types/forms';
-import { NewQuoteSchema } from '@/schemas/quotes';
-import { Quote } from '@/types/quotes';
+import { ActionResult, NewQuoteFormState } from "@/types/forms";
+import { NewQuoteSchema } from "@/schemas/quotes";
+import { Quote } from "@/types/quotes";
 import {
   createQuote,
   deleteQuote,
   likeQuote,
   unlikeQuote,
   updateQuote,
-} from '@/app/services/quotes';
-import { auth0 } from '@/lib/auth0';
-import { revalidatePath } from 'next/cache';
+} from "@/app/services/quotes";
+import { auth0 } from "@/lib/auth0";
+import { revalidatePath } from "next/cache";
 
 export async function addQuote(
   currentState: NewQuoteFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<NewQuoteFormState> {
   const session = await auth0.getSession();
   const userId = session?.user.sub;
 
   if (!userId) {
-    return { success: false, message: 'Unauthorized' };
+    return { success: false, message: "Unauthorized" };
   }
 
   const rawData = {
-    author: (formData.get('author') as string) ?? '',
-    quote: (formData.get('quote') as string) ?? '',
+    author: (formData.get("author") as string) ?? "",
+    quote: (formData.get("quote") as string) ?? "",
   };
 
   const result = NewQuoteSchema.safeParse(rawData);
@@ -41,8 +41,8 @@ export async function addQuote(
 
   try {
     await createQuote(result.data, userId);
-    revalidatePath('/');
-    revalidatePath('/user/my-quotes');
+    revalidatePath("/");
+    revalidatePath("/user/my-quotes");
     return {
       success: true,
       data: result.data,
@@ -51,7 +51,7 @@ export async function addQuote(
     console.error(error);
     return {
       success: false,
-      message: 'An error occurred when saving the quote, try again later.',
+      message: "An error occurred when saving the quote, try again later.",
       data: result.data,
     };
   }
@@ -62,7 +62,7 @@ export async function likeQuoteAction(quoteId: string): Promise<ActionResult> {
   const userId = session?.user?.sub;
 
   if (!userId) {
-    return { success: false, message: 'Unauthorized' };
+    return { success: false, message: "Unauthorized" };
   }
 
   try {
@@ -70,11 +70,11 @@ export async function likeQuoteAction(quoteId: string): Promise<ActionResult> {
     if (!found) {
       return {
         success: false,
-        message: 'Quote not found',
+        message: "Quote not found",
       };
     }
-    revalidatePath('/');
-    revalidatePath('/user/quotes');
+    revalidatePath("/");
+    revalidatePath("/user/quotes");
     return {
       success: true,
     };
@@ -82,19 +82,19 @@ export async function likeQuoteAction(quoteId: string): Promise<ActionResult> {
     console.error(error);
     return {
       success: false,
-      message: 'An error occurred when liking the quote, try again later.',
+      message: "An error occurred when liking the quote, try again later.",
     };
   }
 }
 
 export async function unlikeQuoteAction(
-  quoteId: string
+  quoteId: string,
 ): Promise<ActionResult> {
   const session = await auth0.getSession();
   const userId = session?.user?.sub;
 
   if (!userId) {
-    return { success: false, message: 'Unauthorized' };
+    return { success: false, message: "Unauthorized" };
   }
 
   try {
@@ -102,11 +102,11 @@ export async function unlikeQuoteAction(
     if (!found) {
       return {
         success: false,
-        message: 'Quote not found',
+        message: "Quote not found",
       };
     }
-    revalidatePath('/');
-    revalidatePath('/user/quotes');
+    revalidatePath("/");
+    revalidatePath("/user/quotes");
     return {
       success: true,
     };
@@ -114,19 +114,19 @@ export async function unlikeQuoteAction(
     console.error(error);
     return {
       success: false,
-      message: 'An error occurred when unliking the quote, try again later.',
+      message: "An error occurred when unliking the quote, try again later.",
     };
   }
 }
 
 export async function deleteQuoteAction(
-  quoteId: string
+  quoteId: string,
 ): Promise<ActionResult> {
   const session = await auth0.getSession();
   const userId = session?.user?.sub;
 
   if (!userId) {
-    return { success: false, message: 'Unauthorized' };
+    return { success: false, message: "Unauthorized" };
   }
 
   try {
@@ -134,12 +134,12 @@ export async function deleteQuoteAction(
     if (!found) {
       return {
         success: false,
-        message: 'Quote not found',
+        message: "Quote not found",
       };
     }
-    revalidatePath('/');
-    revalidatePath('/user/my-quotes');
-    revalidatePath('/user/quotes');
+    revalidatePath("/");
+    revalidatePath("/user/my-quotes");
+    revalidatePath("/user/quotes");
     return {
       success: true,
     };
@@ -147,26 +147,26 @@ export async function deleteQuoteAction(
     console.error(error);
     return {
       success: false,
-      message: 'An error occurred when deleting the quote, try again later.',
+      message: "An error occurred when deleting the quote, try again later.",
     };
   }
 }
 
 export async function updateQuoteAction(
   currentState: NewQuoteFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<NewQuoteFormState> {
   const session = await auth0.getSession();
   const userId = session?.user?.sub;
 
   if (!userId) {
-    return { success: false, message: 'Unauthorized' };
+    return { success: false, message: "Unauthorized" };
   }
 
-  const quoteId = formData.get('id') as string;
+  const quoteId = formData.get("id") as string;
   const rawData = {
-    author: (formData.get('author') as string) ?? '',
-    quote: (formData.get('quote') as string) ?? '',
+    author: (formData.get("author") as string) ?? "",
+    quote: (formData.get("quote") as string) ?? "",
   };
 
   const result = NewQuoteSchema.safeParse(rawData);
@@ -182,13 +182,13 @@ export async function updateQuoteAction(
     if (!found) {
       return {
         success: false,
-        message: 'Quote not found',
+        message: "Quote not found",
         data: result.data,
       };
     }
-    revalidatePath('/');
-    revalidatePath('/user/my-quotes');
-    revalidatePath('/user/quotes');
+    revalidatePath("/");
+    revalidatePath("/user/my-quotes");
+    revalidatePath("/user/quotes");
     return {
       success: true,
       data: result.data,
@@ -197,7 +197,7 @@ export async function updateQuoteAction(
     console.error(error);
     return {
       success: false,
-      message: 'An error occurred when saving the quote, try again later.',
+      message: "An error occurred when saving the quote, try again later.",
       data: result.data,
     };
   }
